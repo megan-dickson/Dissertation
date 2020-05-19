@@ -1,40 +1,9 @@
----
-title: "Statistics Code"
-author: "Megan"
-date: "5/6/2020"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-##Loading the the data for the analysis, Helminth data was turned into "1's" and "0's" if there is any worm detected or not
-
-```{r}
-Data <- read.csv("~/Desktop/Dissertation_data.csv", header = TRUE)
+Data <- read.csv("~/Desktop/Data.csv", header = TRUE)
 Data
-```
-
-Running basic description stats on a few of the columns of interest
-```{r}
-##TB1
-sd(Data$TB1)
-mean(Data$TB1)
-min(Data$TB1)
-max(Data$TB1)
-
-##TB2                         
-sd(Data$TB2)
-mean(Data$TB2)
-min(Data$TB2)
-max(Data$TB2)
-
-```
 
 
-Running statistical tests on different parts of the dataset
-```{r}
+##Running Chi2 and t-tests
+chisq.test(Data$interp, Data$Helminths) 
 
 t.test(Data$TB1[Data$Helminths == 0], Data$TB1[Data$Helminths == 1])
 
@@ -44,12 +13,9 @@ t.test(Data$TB1[Data$interp == 0], Data$TB1[Data$interp == 1])
 
 t.test(Data$TB2[Data$interp == 0], Data$TB2[Data$interp == 1])
 
-chisq.test(Data$interp, Data$BMI)
 
-```
+##making viusals of some aspects of the data
 
-Making graphs from some of the data
-```{r}
 BMI_histo <- hist(Data$BMI, xlab = "Body Mass Index (BMI)",main = "Histogram of BMI's")
 
 BMI_bar <- plot(Data$Sex, Data$BMI, ylab = "BMI", xlab = "Sex", main = "BMI Across Gender")
@@ -60,7 +26,23 @@ TB2_sex <- plot(Data$Sex, Data$TB2, ylab = "TB2", xlab = "Sex", main = "TB2 Resu
 
 Interp_sex <- plot(Data$Sex, Data$interp, ylab = "Interpretation", xlab = "Sex", main = "Overall Results Across Gender")
 
+MClan_TB1 <- plot(Data$Mother.s.Clan, Data$TB1, ylab = "TB1", xlab = "Mother's Clan", main = "Mother's Clan TB1 Results")
+
+MClan_TB2 <- plot(Data$Mother.s.Clan, Data$TB2, ylab = "TB2", xlab = "Mother's Clan", main = "Mother's Clan TB2 Results")
+
+FClan_TB1 <- plot(Data$Father.s.Clan, Data$TB1, ylab = "TB1", xlab = "Father's Clan", main = "Father's Clan TB1 Results")
+
+FClan_TB2 <- plot(Data$Father.s.Clan, Data$TB1, ylab = "TB1", xlab = "Father's Clan", main = "Father's Clan TB1 Results")
+
+
+
+
 library(ggplot2)
+
+ggplot(Data, aes(x=Sex, y=BMI)) +
+  geom_boxplot() +
+  facet_grid(. ~ interp) 
+
 
 ggplot(Data, aes(x=Mother.s.Clan, y=TB1)) +
   geom_boxplot() 
@@ -72,8 +54,5 @@ ggplot(Data, aes(x=Father.s.Clan, y=TB1)) +
   geom_boxplot() 
 ggplot(Data, aes(x=Father.s.Clan, y=TB2)) +
   geom_boxplot() 
-
-
-```
 
 

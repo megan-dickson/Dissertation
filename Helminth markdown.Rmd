@@ -1,0 +1,45 @@
+---
+title: "Helminth markdown"
+author: "Megan"
+date: "5/19/2020"
+output: html_document
+---
+
+```{r}
+H_data <- read.csv("~/Desktop/Helminth_data.csv", header = TRUE)
+
+library(expss)
+library(tidyverse)
+
+##selecting the columns we want to work with just HELMINTH data
+Hel_data <- data.frame(H_data$Sex, H_data$Age, H_data$H_species, H_data$Helminths, H_data$BMI, 
+                       H_data$Current.Residence, H_data$Father.s.Clan, H_data$Mother.s.Clan,
+                       H_data$interp) %>% 
+  rename(Sex = H_data.Sex, Age = H_data.Age, "Helminth Species" = H_data.H_species, Helminths = H_data.Helminths, BMI = H_data.BMI, 
+         Location = H_data.Current.Residence, "Father's Clan" = H_data.Father.s.Clan,
+         "Mother's Clan" = H_data.Mother.s.Clan, Outcome = H_data.interp) %>%
+  na.omit(Hel_data)
+
+View(Hel_data)
+
+
+Hel_data = apply_labels(Hel_data,
+                        Sex = "Sex",
+                        Age = "Age",
+                        "Helminth Species" = "Helminth Species",
+                        Helminths = "Helminths",
+                        BMI = "BMI",
+                        Location = "Current Residence",
+                        "Father's Clan" = "Father's Clan",
+                        "Mother's Clan" = "Mother's Clan",
+                        Outcome = "Clinical Interpretation",
+                        Outcome = c("Positive" = "POSITIVE", "Negative" = "NEGATIVE", 
+                                   "Positive*" = "POSITIVE*"))
+##breaking it down by gender and outcome
+cro(Hel_data$Sex,Hel_data$Outcome) 
+
+##helminth infection and gender
+cro(list(Hel_data$Sex, Hel_data$Age,Hel_data$Outcome), Hel_data$Helminths) 
+
+```
+
